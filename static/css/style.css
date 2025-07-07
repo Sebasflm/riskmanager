@@ -20,7 +20,7 @@ th{background:#e0ecff;}
 .nav-tabs .nav-link{color:#007bff;}
 .nav-tabs .nav-link:hover{color:#0056b3;}
 .nav-tabs .nav-link.active{background:#007bff;color:white;}
-.nulo{background-color:#e2e3e5;}/* gris claro */
-.bajo{background-color:#d4edda;}/* verde claro */
-.medio{background-color:#fff3cd;}/* amarillo claro */
-.alto{background-color:#f8d7da;}/* rojo claro */
+.nulo{background-color:#e2e3e5 !important;}/* gris claro */
+.bajo{background-color:#d4edda !important;}/* verde claro */
+.medio{background-color:#fff3cd !important;}/* amarillo claro */
+.alto{background-color:#f8d7da !important;}/* rojo claro */
