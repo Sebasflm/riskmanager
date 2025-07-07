@@ -39,9 +39,9 @@
         <div class="tab-content mt-3">
             <div id="activos">
                 <table class="table table-bordered table-sm">
-                    <tr><th>ID</th><th>Subdominio</th><th>IP</th><th>Registro</th><th>Estado</th></tr>
+                    <tr><th>ID</th><th>Subdominio</th><th>IP</th><th>Registro</th><th>Estado</th><th>Observaciones</th></tr>
                     {% for item in activos %}
-                    <tr><td>{{ item.id }}</td><td>{{ item.subdominio }}</td><td>{{ item.ip }}</td><td>{{ item.registro }}</td><td>{{ item.estado }}</td></tr>
+                    <tr><td>{{ item.id }}</td><td>{{ item.subdominio }}</td><td>{{ item.ip }}</td><td>{{ item.registro }}</td><td>{{ item.estado }}</td><td>{{ item.observaciones }}</td></tr>
                     {% endfor %}
                 </table>
             </div>
