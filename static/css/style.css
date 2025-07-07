@@ -20,7 +20,23 @@ th{background:#e0ecff;}
 .nav-tabs .nav-link{color:#007bff;}
 .nav-tabs .nav-link:hover{color:#0056b3;}
 .nav-tabs .nav-link.active{background:#007bff;color:white;}
-.nulo{background-color:#e2e3e5 !important;}/* gris claro */
-.bajo{background-color:#d4edda !important;}/* verde claro */
-.medio{background-color:#fff3cd !important;}/* amarillo claro */
-.alto{background-color:#f8d7da !important;}/* rojo claro */
+.nulo,
+.nulo td{
+    background-color:#e2e3e5 !important;
+    --bs-table-bg:#e2e3e5 !important;
+}/* gris claro */
+.bajo,
+.bajo td{
+    background-color:#d4edda !important;
+    --bs-table-bg:#d4edda !important;
+}/* verde claro */
+.medio,
+.medio td{
+    background-color:#fff3cd !important;
+    --bs-table-bg:#fff3cd !important;
+}/* amarillo claro */
+.alto,
+.alto td{
+    background-color:#f8d7da !important;
+    --bs-table-bg:#f8d7da !important;
+}/* rojo claro */
