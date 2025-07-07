@@ -73,6 +73,7 @@
             <div id="residual" style="display:none;">
                 <table class="table table-bordered table-sm">
                     <tr>
+                        <th>ID</th>
                         <th>Subdominio</th>
                         <th>Riesgo Original</th>
                         <th>Control Aplicado</th>
@@ -83,6 +84,7 @@
                     </tr>
                     {% for r in residuales %}
                     <tr class="{{ r.clasificacion|lower }}">
+                        <td>{{ r.id }}</td>
                         <td>{{ r.subdominio }}</td>
                         <td>{{ r.riesgo_original }}</td>
                         <td>{{ r.control }}</td>
