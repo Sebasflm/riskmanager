@@ -55,7 +55,30 @@
                     {% endfor %}
                 </table>
             </div>
-            <div id="residual" style="display:none;"><p>[Riesgo residual aparecerá aquí]</p></div>
+            <div id="residual" style="display:none;">
+                <table>
+                    <tr>
+                        <th>Subdominio</th>
+                        <th>Riesgo Original</th>
+                        <th>Control Aplicado</th>
+                        <th>Probabilidad</th>
+                        <th>Impacto</th>
+                        <th>Riesgo Residual</th>
+                        <th>Clasificación</th>
+                    </tr>
+                    {% for r in residuales %}
+                    <tr class="{{ r.clasificacion|lower }}">
+                        <td>{{ r.subdominio }}</td>
+                        <td>{{ r.riesgo_original }}</td>
+                        <td>{{ r.control }}</td>
+                        <td>{{ r.probabilidad }}</td>
+                        <td>{{ r.impacto }}</td>
+                        <td>{{ r.riesgo_residual }}</td>
+                        <td>{{ r.clasificacion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 </body>

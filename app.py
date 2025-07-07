@@ -3,6 +3,7 @@ from scanner.discovery import discover_subdomains
 from logic.valuation import evaluate_assets
 from logic.risks import identify_risks
 from logic.treatment import generate_treatments
+from logic.residual import calculate_residual
 
 app = Flask(__name__)
 
@@ -20,9 +21,13 @@ def results(domain):
     valoraciones = evaluate_assets(activos)
     riesgos = identify_risks(activos)
     tratamientos = generate_treatments(riesgos)
-    return render_template("results.html", domain=domain,
-                           activos=activos, valoraciones=valoraciones,
-                           riesgos=riesgos, tratamientos=tratamientos)
+    residuales = calculate_residual(tratamientos, valoraciones, riesgos)
+    return render_template(
+        "results.html", domain=domain,
+        activos=activos, valoraciones=valoraciones,
+        riesgos=riesgos, tratamientos=tratamientos,
+        residuales=residuales
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
