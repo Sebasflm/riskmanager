@@ -10,6 +10,7 @@ button:hover{background:#0056b3;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
 table,th,td{border:1px solid #a0bcd4;}
 th,td{padding:8px;text-align:center;}
+.nulo{background-color:#e2e3e5;}/* gris claro */
 .bajo{background-color:#d4edda;}/* verde claro */
 .medio{background-color:#fff3cd;}/* amarillo claro */
 .alto{background-color:#f8d7da;}/* rojo claro */
