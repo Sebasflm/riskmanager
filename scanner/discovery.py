@@ -43,27 +43,79 @@ def resolve_dns(subdomain):
     return '-', 'No resuelve'
 
 def check_http_status(subdomain):
-    headers = {'User-Agent':'Mozilla/5.0','Accept':'*/*'}
-    for proto in ('https://','http://'):
-        try:
-            r = requests.head(f"{proto}{subdomain}", headers=headers, timeout=5, allow_redirects=True)
-            return str(r.status_code), True
-        except:
-            continue
-    return 'No responde', False
+    """Check HTTP and HTTPS connectivity.
+
+    Returns a tuple of:
+        status_code (str): HTTP status of the first responding protocol.
+        connected (bool): whether the host responded.
+        https_ok (bool): whether HTTPS connection succeeded.
+        headers (dict): headers from HTTPS response if available.
+    """
+
+    headers = {'User-Agent': 'Mozilla/5.0', 'Accept': '*/*'}
+    status_code = 'No responde'
+    connected = False
+    https_ok = False
+    resp_headers = {}
+
+    # Try HTTPS first (ignore certificate issues)
+    try:
+        r = requests.head(
+            f"https://{subdomain}",
+            headers=headers,
+            timeout=5,
+            allow_redirects=True,
+            verify=False,
+        )
+        status_code = str(r.status_code)
+        connected = True
+        https_ok = True
+        resp_headers = r.headers
+        return status_code, connected, https_ok, resp_headers
+    except Exception:
+        pass
+
+    # Fallback to HTTP
+    try:
+        r = requests.head(
+            f"http://{subdomain}",
+            headers=headers,
+            timeout=5,
+            allow_redirects=True,
+        )
+        status_code = str(r.status_code)
+        connected = True
+    except Exception:
+        pass
+
+    return status_code, connected, https_ok, resp_headers
 
 def discover_subdomains(domain):
     subs = set(fetch_crtsh(domain)) | set(run_subfinder(domain))
     activos = []
     for i, sub in enumerate(sorted(subs), 1):
         ip, record = resolve_dns(sub)
-        status_code, connected = check_http_status(sub)
+        status_code, connected, https_ok, headers = check_http_status(sub)
         estado = f"Conectado ({status_code})" if connected else status_code
+
+        observaciones = []
+        if not https_ok:
+            observaciones.append('No soporta HTTPS')
+        else:
+            missing = []
+            if 'Strict-Transport-Security' not in headers:
+                missing.append('Strict-Transport-Security')
+            if 'Content-Security-Policy' not in headers:
+                missing.append('Content-Security-Policy')
+            if missing:
+                observaciones.append('Faltan encabezados: ' + ', '.join(missing))
+
         activos.append({
             'id': f"SD{i}",
             'subdominio': sub,
             'ip': ip,
             'registro': record,
-            'estado': estado
+            'estado': estado,
+            'observaciones': '; '.join(observaciones) if observaciones else 'N/A'
         })
     return activos
