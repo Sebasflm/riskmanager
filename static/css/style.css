@@ -1,7 +1,13 @@
-body{font-family:Arial,sans-serif;background:#f4f9ff;color:#1f2d3d;margin:0;padding:0;}
-.container{max-width:960px;margin:2rem auto;background:white;padding:2rem;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+body{font-family:Roboto, Arial, sans-serif;background:#f4f9ff;color:#1f2d3d;margin:0;padding:0;}
+.container{max-width:960px;width:90%;margin:2rem auto;background:white;padding:2rem;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+@media (max-width:600px){
+  .container{padding:1rem;}
+  button{width:100%;}
+}
+h1,h2,h3,h4{color:#1f2d3d;margin-bottom:1rem;}
 input[type="text"]{width:100%;padding:10px;border:1px solid #b0c4de;border-radius:6px;}
-button{background:#007bff;color:white;border:none;padding:10px 15px;margin-top:10px;border-radius:6px;cursor:pointer;}
+button{background:#007bff;color:white;border:none;padding:10px 20px;margin-top:10px;border-radius:6px;cursor:pointer;}
 button:hover{background:#0056b3;}
 .tabs{display:flex;margin-top:20px;}
 .tab{flex:1;padding:10px;background:#e0ecff;text-align:center;cursor:pointer;border:1px solid #ccc;}
@@ -9,7 +15,8 @@ button:hover{background:#0056b3;}
 .tab-content{margin-top:20px;}
 table{width:100%;border-collapse:collapse;margin-top:10px;}
 table,th,td{border:1px solid #a0bcd4;}
-th,td{padding:8px;text-align:center;}
+th,td{padding:10px;text-align:center;color:#1f2d3d;}
+th{background:#e0ecff;}
 .nulo{background-color:#e2e3e5;}/* gris claro */
 .bajo{background-color:#d4edda;}/* verde claro */
 .medio{background-color:#fff3cd;}/* amarillo claro */
