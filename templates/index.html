@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html><head><title>RiskManager</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head><body>
+<div class="container">
+  <h2>Evaluación de Riesgo Cibernético</h2>
+  <form method="post">
+    <label for="domain">Ingrese el dominio a analizar:</label><br>
+    <input type="text" name="domain" id="domain" placeholder="ejemplo.com" required>
+    <button type="submit">Analizar</button>
+  </form>
+</div>
+</body></html>

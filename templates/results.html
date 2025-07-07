@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultados - {{ domain }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content > div').forEach(d => d.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+        }
+        window.onload = () => showTab('activos');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Resultados para: {{ domain }}</h2>
+        <div class="tabs">
+            <div class="tab" onclick="showTab('activos')">Activos encontrados</div>
+            <div class="tab" onclick="showTab('valoracion')">Valoración de activos</div>
+            <div class="tab" onclick="showTab('riesgos')">Identificación de riesgos</div>
+            <div class="tab" onclick="showTab('tratamiento')">Tratamiento</div>
+            <div class="tab" onclick="showTab('residual')">Riesgo residual</div>
+        </div>
+        <div class="tab-content">
+            <div id="activos">
+                <table>
+                    <tr><th>ID</th><th>Subdominio</th><th>IP</th><th>Registro</th><th>Estado</th></tr>
+                    {% for item in activos %}
+                    <tr><td>{{ item.id }}</td><td>{{ item.subdominio }}</td><td>{{ item.ip }}</td><td>{{ item.registro }}</td><td>{{ item.estado }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="valoracion" style="display:none;">
+                <table>
+                    <tr><th>ID</th><th>Subdominio</th><th>C</th><th>I</th><th>D</th><th>F</th><th>Valor</th><th>Clasificación</th></tr>
+                    {% for v in valoraciones %}
+                    <tr class="{{ v.clasificacion|lower }}">
+                        <td>{{ v.id }}</td><td>{{ v.subdominio }}</td><td>{{ v.C }}</td><td>{{ v.I }}</td><td>{{ v.D }}</td><td>{{ v.F }}</td><td>{{ v.valor }}</td><td>{{ v.clasificacion }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="riesgos" style="display:none;">
+                <table>
+                    <tr><th>ID</th><th>Subdominio</th><th>Amenaza Identificada</th><th>Vulnerabilidad Técnica</th><th>Riesgo Potencial</th></tr>
+                    {% for r in riesgos %}
+                    <tr><td>{{ r.id }}</td><td>{{ r.subdominio }}</td><td>{{ r.amenaza }}</td><td>{{ r.vulnerabilidad }}</td><td>{{ r.riesgo }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="tratamiento" style="display:none;">
+                <table>
+                    <tr><th>ID</th><th>Subdominio</th><th>Riesgo</th><th>Acción sugerida</th><th>Responsable</th><th>Plazo</th><th>Estado</th></tr>
+                    {% for t in tratamientos %}
+                    <tr><td>{{ t.id }}</td><td>{{ t.subdominio }}</td><td>{{ t.riesgo }}</td><td>{{ t.accion }}</td><td>{{ t.responsable }}</td><td>{{ t.plazo }}</td><td>{{ t.estado }}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="residual" style="display:none;"><p>[Riesgo residual aparecerá aquí]</p></div>
+        </div>
+    </div>
+</body>
+</html>
