@@ -1,8 +1,27 @@
 def evaluate_assets(activos):
-    """
-    Evaluates each asset with the CIA+F model and returns valuation results.
-    Regulatory factor (F) is 2 if subdomain matches keywords indicating personal data or critical functions.
-    ID from activos is preserved.
+    """Valuate discovered assets using a simple CIA+F model.
+
+    Each asset already contains DNS record information and an HTTP status which
+    are used to derive the CIA values:
+
+    * **Confidentiality (C)**  
+      Assets whose DNS record type is ``MX`` or ``TXT`` are considered to hold
+      or facilitate access to personal data (mail servers, text records used for
+      verification) and therefore receive a value of ``3``.  Any other record
+      type results in ``2``.
+
+    * **Integrity (I)**  
+      If the HTTP check returned a status code starting with ``4`` or did not
+      respond, integrity is deemed lower and the value ``2`` is assigned.
+      Otherwise the asset receives ``3``.
+
+    * **Availability (D)**  
+      Assets that did not respond to HTTP requests get the lowest availability
+      score of ``1``.  Responding assets receive ``3``.
+
+    The **regulatory factor (F)** doubles the total when the subdomain name
+    contains keywords typically related to personal information or critical
+    functionality.  The ``id`` from ``activos`` is preserved for traceability.
     """
     valoraciones = []
     # Keywords indicating personal data or critical functions
@@ -29,8 +48,10 @@ def evaluate_assets(activos):
             clas = 'Bajo'
         elif valor <= 12:
             clas = 'Medio'
-        else:
+        elif valor <= 18:
             clas = 'Alto'
+        else:
+            clas = 'Crítico'
         valoraciones.append({
             'id': id_,
             'subdominio': asset.get('subdominio'),
