@@ -29,5 +29,10 @@ def results(domain):
         residuales=residuales
     )
 
+@app.route("/seguimiento")
+def seguimiento():
+    """Display follow-up activities and documentation."""
+    return render_template("seguimiento.html")
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
