@@ -35,6 +35,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="#" data-tab="residual" onclick="showTab('residual')">Riesgo residual</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="reporte" onclick="showTab('reporte')">Reporte consolidado</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="kpis" onclick="showTab('kpis')">KPIs</a>
+            </li>
         </ul>
         <div class="tab-content mt-3">
             <div id="activos">
@@ -136,6 +142,40 @@
                         <td>{{ r.clasificacion }}</td>
                     </tr>
                     {% endfor %}
+                </table>
+            </div>
+            <div id="reporte" style="display:none;">
+                <table class="table table-bordered table-sm">
+                    <tr>
+                        <th>ID</th>
+                        <th>Subdominio</th>
+                        <th>Valor CIA×F</th>
+                        <th>Nivel de Riesgo</th>
+                        <th>Clasificación</th>
+                        <th>Tratamiento</th>
+                        <th>Observaciones Técnicas</th>
+                        <th>Recomendaciones</th>
+                    </tr>
+                    {% for item in reporte %}
+                    <tr class="{{ item.clasificacion|lower }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.subdominio }}</td>
+                        <td>{{ item.valor }}</td>
+                        <td>{{ item.nivel_riesgo }}</td>
+                        <td>{{ item.clasificacion }}</td>
+                        <td>{{ item.tratamiento }}</td>
+                        <td>{{ item.observaciones }}</td>
+                        <td>{{ item.recomendaciones }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="kpis" style="display:none;">
+                <table class="table table-bordered table-sm">
+                    <tr><th>Métrica</th><th>Valor Actual</th></tr>
+                    <tr><td>% subdominios con controles mínimos activos</td><td>{{ kpis.kpi1 }}%</td></tr>
+                    <tr><td>% subdominios sin responsable asignado</td><td>{{ kpis.kpi2 }}%</td></tr>
+                    <tr><td>% subdominios con configuración DNS segura</td><td>{{ kpis.kpi3 }}%</td></tr>
                 </table>
             </div>
     </div>
