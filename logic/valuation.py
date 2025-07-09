@@ -1,3 +1,6 @@
+from logic.constants import normative_keywords
+
+
 def evaluate_assets(activos):
     """Valuate discovered assets using a simple CIA+F model.
 
@@ -24,12 +27,6 @@ def evaluate_assets(activos):
     functionality.  The ``id`` from ``activos`` is preserved for traceability.
     """
     valoraciones = []
-    # Keywords indicating personal data or critical functions
-    normative_keywords = [
-        'mail', 'contact', 'login', 'auth', 'register', 'signup',
-        'user', 'account', 'secure', 'payment', 'pay', 'dashboard',
-        'profile', 'api', 'admin', 'settings', 'personal'
-    ]
     for asset in activos:
         id_ = asset.get('id')
         sub = asset.get('subdominio', '').lower()

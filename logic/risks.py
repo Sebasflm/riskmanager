@@ -1,3 +1,6 @@
+from logic.constants import normative_keywords
+
+
 def identify_risks(activos, valoraciones=None):
     """
     Identifica amenazas, vulnerabilidades y riesgos potenciales para cada activo
@@ -90,10 +93,7 @@ def identify_risks(activos, valoraciones=None):
             C = 3 if reg in ['MX', 'TXT'] else 2
             I = 2 if status.startswith('4') or status == 'No responde' else 3
             D = 1 if status == 'No responde' else 3
-            F = 2 if any(k in sub for k in ['mail', 'contact', 'login', 'auth', 'register',
-                                           'signup', 'user', 'account', 'secure', 'payment',
-                                           'pay', 'dashboard', 'profile', 'api', 'admin',
-                                           'settings', 'personal']) else 1
+            F = 2 if any(k in sub for k in normative_keywords) else 1
             impacto = (C + I + D) * F
 
         # Probabilidad basada en indicadores de exposición
