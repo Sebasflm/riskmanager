@@ -34,7 +34,7 @@ def _exposure_factor(action):
 
 
 def calculate_residual(tratamientos, valoraciones, riesgos):
-    """Compute residual risk after applying treatment controls.
+    """Compute residual risk using the primary control from each treatment.
 
     Args:
         tratamientos (list): treatment plan items with 'id', 'accion', etc.
@@ -43,7 +43,8 @@ def calculate_residual(tratamientos, valoraciones, riesgos):
 
     Returns:
         list: residual risk entries with id, subdomain, original risk,
-        applied control, initial value, reduction, exposure factor,
+        applied control, initial value, reduction (based on
+        ``control_principal``), exposure factor,
         residual risk score and classification.
     """
     val_map = {v['id']: v for v in valoraciones}
@@ -54,12 +55,15 @@ def calculate_residual(tratamientos, valoraciones, riesgos):
         id_ = t['id']
         sub = t['subdominio']
         controls = t.get('controles', [])
+        primary = t.get('control_principal')
         accion = t.get('accion', '')
-        control_aplicado = ', '.join(controls) if controls else accion
+        if not primary and controls:
+            primary = max(controls, key=_control_reduction)
+        control_aplicado = primary if primary else accion
         original = risk_map.get(id_, {}).get('riesgo', t.get('riesgo', 'N/A'))
         valor = val_map.get(id_, {}).get('valor', 0)
 
-        reduccion = sum(_control_reduction(c) for c in controls)
+        reduccion = _control_reduction(primary) if primary else 0
         exposicion = _exposure_factor(accion)
 
         residual_score = max(valor - reduccion, 0) * exposicion
