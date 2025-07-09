@@ -4,6 +4,7 @@ from logic.valuation import evaluate_assets
 from logic.risks import identify_risks
 from logic.treatment import generate_treatments
 from logic.residual import calculate_residual
+from logic.report import build_consolidated_report
 
 app = Flask(__name__)
 
@@ -22,11 +23,12 @@ def results(domain):
     riesgos = identify_risks(activos, valoraciones)
     tratamientos = generate_treatments(riesgos)
     residuales = calculate_residual(tratamientos, valoraciones, riesgos)
+    reporte = build_consolidated_report(valoraciones, riesgos, tratamientos, residuales)
     return render_template(
         "results.html", domain=domain,
         activos=activos, valoraciones=valoraciones,
         riesgos=riesgos, tratamientos=tratamientos,
-        residuales=residuales
+        residuales=residuales, reporte=reporte
     )
 
 if __name__ == "__main__":
