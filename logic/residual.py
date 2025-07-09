@@ -5,20 +5,20 @@
 def _control_reduction(control):
     """Return reduction score for a given control name."""
     robust = {
-        'MFA', 'DNSSEC', 'CAA', 'Tokens', 'Rate limiting', 'CSP'
+        'MFA', 'DNSSEC', 'CAA', 'Tokens', 'Rate limiting', 'CSP', 'WAF'
     }
     basic = {
-        'HTTPS', 'SPF', 'DKIM', 'DMARC'
+        'HTTPS', 'SPF', 'DKIM', 'DMARC', 'TLS'
     }
     organisational = {
         'Revisión de roles', 'Monitoreo de DNS'
     }
     if control in robust:
-        return 3
+        return 8
     if control in basic:
-        return 2
+        return 6
     if control in organisational:
-        return 1
+        return 3
     # default minimal impact if unknown
     return 1
 
@@ -27,8 +27,10 @@ def _exposure_factor(action):
     """Determine exposure factor after applying the action."""
     text = action.lower()
     if 'eliminar' in text or 'deshabilitar' in text:
+        return 0.0
+    if any(k in text for k in ['mfa', 'https', 'token', 'auth', 'csp', 'dnssec', 'limitar', 'ip']):
         return 1.0
-    if any(k in text for k in ['mfa', 'https', 'token', 'auth', 'csp', 'dnssec', 'limitar']):
+    if any(k in text for k in ['login', 'password', 'contrase\u00f1a']):
         return 1.5
     return 2.0
 
@@ -68,13 +70,13 @@ def calculate_residual(tratamientos, valoraciones, riesgos):
 
         residual_score = max(valor - reduccion, 0) * exposicion
 
-        if residual_score <= 4:
+        if residual_score <= 7:
             clas = 'Residual Bajo'
             css = 'bajo'
-        elif residual_score <= 9:
+        elif residual_score <= 14:
             clas = 'Residual Medio'
             css = 'medio'
-        elif residual_score <= 15:
+        elif residual_score <= 22:
             clas = 'Residual Alto'
             css = 'alto'
         else:

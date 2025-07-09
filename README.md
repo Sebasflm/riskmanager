@@ -14,3 +14,20 @@ Tras calcular la valoración de cada activo, los riesgos identificados, el plan 
 - Observaciones técnicas y recomendaciones.
 
 El reporte puede consultarse en la pestaña "Reporte técnico" de la página de resultados.
+
+### Cálculo del riesgo residual
+
+El riesgo residual se obtiene usando la fórmula:
+
+```
+(Valor CIA×F - Reducción Aplicada) × Exposición Técnica
+```
+
+La reducción aplicada depende del control más representativo (8 puntos para controles robustos, 6 para básicos y 3 para organizativos). La exposición técnica varía entre 0 (activo eliminado), 1.0, 1.5 y 2.0 según el acceso que conserve el activo.
+
+La clasificación resultante es:
+
+- **Residual Bajo**: 0–7
+- **Residual Medio**: 7–14
+- **Residual Alto**: 15–22
+- **Residual Crítico**: &gt;22
