@@ -42,12 +42,14 @@ def generate_treatments(riesgos):
             plazo = '10 días'
             controles = ['MFA', 'DNSSEC', 'CSP']
 
-        estrategia = estrategia_map.get(item.get('clasificacion', 'Medio'), 'Mitigar')
+        clasificacion = item.get('clasificacion', 'Medio')
+        estrategia = estrategia_map.get(clasificacion, 'Mitigar')
 
         plan.append({
             'id': id_,
             'subdominio': sub,
             'riesgo': item['riesgo'],
+            'clasificacion': clasificacion,
             'accion': accion,
             'responsable': 'Seguridad TI',
             'plazo': plazo,
