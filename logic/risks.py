@@ -1,9 +1,12 @@
-def identify_risks(activos):
+def identify_risks(activos, valoraciones=None):
     """
     Identifica amenazas, vulnerabilidades y riesgos potenciales para cada activo
     con descripciones detalladas y fundamentadas, incluyendo contexto por palabras clave.
     """
     riesgos = []
+    val_map = {}
+    if valoraciones:
+        val_map = {v['id']: v.get('valor', 0) for v in valoraciones}
     # Reglas de contexto basadas en palabras clave del subdominio
     context_rules = [
         (['auth', 'login'], 
@@ -81,12 +84,51 @@ def identify_risks(activos):
                 amenaza = 'Subdominio inactivo vulnerable a takeover'
                 vulnerabilidad = 'Servicio HTTP/HTTPS ausente'
                 riesgo = 'Disponibilidad del nombre para un atacante'
+        # Impacto basado en valoraciones o cálculo directo
+        impacto = val_map.get(asset['id'])
+        if impacto is None:
+            C = 3 if reg in ['MX', 'TXT'] else 2
+            I = 2 if status.startswith('4') or status == 'No responde' else 3
+            D = 1 if status == 'No responde' else 3
+            F = 2 if any(k in sub for k in ['mail', 'contact', 'login', 'auth', 'register',
+                                           'signup', 'user', 'account', 'secure', 'payment',
+                                           'pay', 'dashboard', 'profile', 'api', 'admin',
+                                           'settings', 'personal']) else 1
+            impacto = (C + I + D) * F
+
+        # Probabilidad basada en indicadores de exposición
+        if reg == 'CNAME' and status == 'No responde':
+            probabilidad = 3
+        elif status.startswith('401') or status.startswith('403'):
+            probabilidad = 3
+        elif status.startswith('404'):
+            probabilidad = 2
+        elif status == 'No responde':
+            probabilidad = 2
+        elif status.startswith('2'):
+            probabilidad = 3
+        else:
+            probabilidad = 2
+
+        nivel_riesgo = probabilidad * impacto
+        if nivel_riesgo <= 6:
+            clasificacion = 'Bajo'
+        elif nivel_riesgo <= 25:
+            clasificacion = 'Medio'
+        elif nivel_riesgo <= 40:
+            clasificacion = 'Alto'
+        else:
+            clasificacion = 'Crítico'
 
         riesgos.append({
             'id': asset['id'],
             'subdominio': asset['subdominio'],
             'amenaza': amenaza,
             'vulnerabilidad': vulnerabilidad,
-            'riesgo': riesgo
+            'riesgo': riesgo,
+            'probabilidad': probabilidad,
+            'impacto': impacto,
+            'nivel_riesgo': nivel_riesgo,
+            'clasificacion': clasificacion
         })
     return riesgos
