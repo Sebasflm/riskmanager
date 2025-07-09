@@ -167,7 +167,7 @@ def export(domain, fmt):
                 wrapmode=WrapMode.CHAR
             )
 
-        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        pdf_bytes = bytes(pdf.output())
         resp = make_response(pdf_bytes)
         resp.headers['Content-Disposition'] = f'attachment; filename={domain}.pdf'
         resp.headers['Content-Type'] = 'application/pdf'
