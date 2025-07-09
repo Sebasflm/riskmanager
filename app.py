@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, make_respo
 import csv
 import io
 from fpdf import FPDF
+from fpdf.enums import XPos, YPos, WrapMode
 from scanner.discovery import discover_subdomains
 from logic.valuation import evaluate_assets
 from logic.risks import identify_risks
@@ -92,55 +93,79 @@ def export(domain, fmt):
     if fmt == 'pdf':
         pdf = FPDF()
         pdf.add_page()
-        pdf.set_font('Arial', 'B', 12)
+        pdf.set_font('Helvetica', 'B', 12)
         pdf.cell(0, 10, f'Reporte para {domain}', ln=True)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Activos', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for a in activos:
             line = f"{a['id']} {a['subdominio']} {a['ip']} {a['registro']} {a['estado']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
         pdf.ln(2)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Valoraciones', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for v in valoraciones:
             line = f"{v['id']} {v['subdominio']} C:{v['C']} I:{v['I']} D:{v['D']} F:{v['F']} Val:{v['valor']} {v['clasificacion']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
         pdf.ln(2)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Riesgos', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for r in riesgos:
             line = f"{r['subdominio']} {r['amenaza']} Prob:{r['probabilidad']} Impacto:{r['impacto']} Nivel:{r['nivel_riesgo']} {r['clasificacion']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
         pdf.ln(2)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Tratamientos', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for t in tratamientos:
             line = f"{t['id']} {t['subdominio']} {t['estrategia']} {t['accion']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
         pdf.ln(2)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Riesgo Residual', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for rr in residuales:
             line = f"{rr['id']} {rr['subdominio']} {rr['riesgo_residual']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
         pdf.ln(2)
 
-        pdf.set_font('Arial', 'B', 10)
+        pdf.set_font('Helvetica', 'B', 10)
         pdf.cell(0, 10, 'Reporte Tecnico', ln=True)
-        pdf.set_font('Arial', '', 8)
+        pdf.set_font('Helvetica', '', 8)
         for rep in reporte:
             line = f"{rep['id']} {rep['subdominio']} {rep['clasificacion']} {rep['riesgo_residual']}"
-            pdf.multi_cell(0, 5, line)
+            pdf.multi_cell(
+                0, 5, line,
+                new_x=XPos.LMARGIN, new_y=YPos.NEXT,
+                wrapmode=WrapMode.CHAR
+            )
 
         pdf_bytes = pdf.output(dest='S').encode('latin-1')
         resp = make_response(pdf_bytes)
