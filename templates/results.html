@@ -117,19 +117,21 @@
                         <th>Subdominio</th>
                         <th>Riesgo Original</th>
                         <th>Control Aplicado</th>
-                        <th>Probabilidad</th>
-                        <th>Impacto</th>
+                        <th>Valor</th>
+                        <th>Reducción</th>
+                        <th>Exposición</th>
                         <th>Riesgo Residual</th>
                         <th>Clasificación</th>
                     </tr>
                     {% for r in residuales %}
-                    <tr class="{{ r.clasificacion|lower }}">
+                    <tr class="{{ r.css }}">
                         <td>{{ r.id }}</td>
                         <td>{{ r.subdominio }}</td>
                         <td>{{ r.riesgo_original }}</td>
                         <td>{{ r.control }}</td>
-                        <td>{{ r.probabilidad }}</td>
-                        <td>{{ r.impacto }}</td>
+                        <td>{{ r.valor }}</td>
+                        <td>{{ r.reduccion }}</td>
+                        <td>{{ r.exposicion }}</td>
                         <td>{{ r.riesgo_residual }}</td>
                         <td>{{ r.clasificacion }}</td>
                     </tr>
