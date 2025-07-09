@@ -82,9 +82,31 @@
             </div>
             <div id="tratamiento" style="display:none;">
                 <table class="table table-bordered table-sm">
-                    <tr><th>ID</th><th>Subdominio</th><th>Riesgo</th><th>Acción sugerida</th><th>Responsable</th><th>Plazo</th><th>Estado</th></tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Subdominio</th>
+                        <th>Riesgo</th>
+                        <th>Clasificación</th>
+                        <th>Estrategia</th>
+                        <th>Controles</th>
+                        <th>Acción sugerida</th>
+                        <th>Responsable</th>
+                        <th>Plazo</th>
+                        <th>Estado</th>
+                    </tr>
                     {% for t in tratamientos %}
-                    <tr><td>{{ t.id }}</td><td>{{ t.subdominio }}</td><td>{{ t.riesgo }}</td><td>{{ t.accion }}</td><td>{{ t.responsable }}</td><td>{{ t.plazo }}</td><td>{{ t.estado }}</td></tr>
+                    <tr class="{{ t.clasificacion|lower }}">
+                        <td>{{ t.id }}</td>
+                        <td>{{ t.subdominio }}</td>
+                        <td>{{ t.riesgo }}</td>
+                        <td>{{ t.clasificacion }}</td>
+                        <td>{{ t.estrategia }}</td>
+                        <td>{{ t.controles|join(', ') }}</td>
+                        <td>{{ t.accion }}</td>
+                        <td>{{ t.responsable }}</td>
+                        <td>{{ t.plazo }}</td>
+                        <td>{{ t.estado }}</td>
+                    </tr>
                     {% endfor %}
                 </table>
             </div>
