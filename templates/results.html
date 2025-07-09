@@ -56,9 +56,27 @@
             </div>
             <div id="riesgos" style="display:none;">
                 <table class="table table-bordered table-sm">
-                    <tr><th>ID</th><th>Subdominio</th><th>Amenaza Identificada</th><th>Vulnerabilidad Técnica</th><th>Riesgo Potencial</th></tr>
+                    <tr>
+                        <th>Subdominio</th>
+                        <th>CIA×F</th>
+                        <th>Amenaza</th>
+                        <th>Vulnerabilidad</th>
+                        <th>Prob.</th>
+                        <th>Impacto</th>
+                        <th>Nivel de Riesgo</th>
+                        <th>Clasificación</th>
+                    </tr>
                     {% for r in riesgos %}
-                    <tr><td>{{ r.id }}</td><td>{{ r.subdominio }}</td><td>{{ r.amenaza }}</td><td>{{ r.vulnerabilidad }}</td><td>{{ r.riesgo }}</td></tr>
+                    <tr class="{{ r.clasificacion|lower }}">
+                        <td>{{ r.subdominio }}</td>
+                        <td>{{ r.impacto }}</td>
+                        <td>{{ r.amenaza }}</td>
+                        <td>{{ r.vulnerabilidad }}</td>
+                        <td>{{ r.probabilidad }}</td>
+                        <td>{{ r.impacto }}</td>
+                        <td>{{ r.nivel_riesgo }}</td>
+                        <td>{{ r.clasificacion }}</td>
+                    </tr>
                     {% endfor %}
                 </table>
             </div>
