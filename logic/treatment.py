@@ -1,6 +1,33 @@
-def generate_treatments(riesgos):
+def _control_priority(control):
+    """Return a priority score for selecting a primary control.
+
+    Los controles clasificados como "robustos" obtienen una puntuación de 3,
+    los "básicos" 2 y los de tipo organizacional 1.  El control con la mayor
+    puntuación se marca como ``control_principal``.
     """
-    Genera sugerencias de tratamiento para cada riesgo identificado.
+    robust = {
+        'MFA', 'DNSSEC', 'CAA', 'Tokens', 'Rate limiting', 'CSP'
+    }
+    basic = {
+        'HTTPS', 'SPF', 'DKIM', 'DMARC'
+    }
+    organisational = {
+        'Revisión de roles', 'Monitoreo de DNS'
+    }
+    if control in robust:
+        return 3
+    if control in basic:
+        return 2
+    if control in organisational:
+        return 1
+    return 0
+
+
+def generate_treatments(riesgos):
+    """Genera un plan de tratamiento para cada riesgo.
+
+    Se asigna un ``control_principal`` eligiendo el control más robusto de la
+    lista de controles sugeridos mediante :func:`_control_priority`.
     """
     plan = []
 
@@ -44,6 +71,7 @@ def generate_treatments(riesgos):
 
         clasificacion = item.get('clasificacion', 'Medio')
         estrategia = estrategia_map.get(clasificacion, 'Mitigar')
+        control_principal = max(controles, key=_control_priority) if controles else None
 
         plan.append({
             'id': id_,
@@ -55,6 +83,7 @@ def generate_treatments(riesgos):
             'plazo': plazo,
             'estrategia': estrategia,
             'controles': controles,
+            'control_principal': control_principal,
             'estado': 'Planificado'
         })
 
