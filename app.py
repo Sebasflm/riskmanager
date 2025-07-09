@@ -94,10 +94,16 @@ def export(domain, fmt):
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font('Helvetica', 'B', 12)
-        pdf.cell(0, 10, f'Reporte para {domain}', ln=True)
+        pdf.cell(
+            0, 10, f'Reporte para {domain}',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Activos', ln=True)
+        pdf.cell(
+            0, 10, 'Activos',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for a in activos:
             line = f"{a['id']} {a['subdominio']} {a['ip']} {a['registro']} {a['estado']}"
@@ -109,7 +115,10 @@ def export(domain, fmt):
         pdf.ln(2)
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Valoraciones', ln=True)
+        pdf.cell(
+            0, 10, 'Valoraciones',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for v in valoraciones:
             line = f"{v['id']} {v['subdominio']} C:{v['C']} I:{v['I']} D:{v['D']} F:{v['F']} Val:{v['valor']} {v['clasificacion']}"
@@ -121,7 +130,10 @@ def export(domain, fmt):
         pdf.ln(2)
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Riesgos', ln=True)
+        pdf.cell(
+            0, 10, 'Riesgos',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for r in riesgos:
             line = f"{r['subdominio']} {r['amenaza']} Prob:{r['probabilidad']} Impacto:{r['impacto']} Nivel:{r['nivel_riesgo']} {r['clasificacion']}"
@@ -133,7 +145,10 @@ def export(domain, fmt):
         pdf.ln(2)
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Tratamientos', ln=True)
+        pdf.cell(
+            0, 10, 'Tratamientos',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for t in tratamientos:
             line = f"{t['id']} {t['subdominio']} {t['estrategia']} {t['accion']}"
@@ -145,7 +160,10 @@ def export(domain, fmt):
         pdf.ln(2)
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Riesgo Residual', ln=True)
+        pdf.cell(
+            0, 10, 'Riesgo Residual',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for rr in residuales:
             line = f"{rr['id']} {rr['subdominio']} {rr['riesgo_residual']}"
@@ -157,7 +175,10 @@ def export(domain, fmt):
         pdf.ln(2)
 
         pdf.set_font('Helvetica', 'B', 10)
-        pdf.cell(0, 10, 'Reporte Tecnico', ln=True)
+        pdf.cell(
+            0, 10, 'Reporte Tecnico',
+            new_x=XPos.LMARGIN, new_y=YPos.NEXT
+        )
         pdf.set_font('Helvetica', '', 8)
         for rep in reporte:
             line = f"{rep['id']} {rep['subdominio']} {rep['clasificacion']} {rep['riesgo_residual']}"
@@ -167,7 +188,7 @@ def export(domain, fmt):
                 wrapmode=WrapMode.CHAR
             )
 
-        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        pdf_bytes = pdf.output()
         resp = make_response(pdf_bytes)
         resp.headers['Content-Disposition'] = f'attachment; filename={domain}.pdf'
         resp.headers['Content-Type'] = 'application/pdf'
