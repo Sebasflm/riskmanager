@@ -2,6 +2,7 @@ import subprocess
 import requests
 import socket
 import dns.resolver
+from requests.exceptions import SSLError
 
 def fetch_crtsh(domain):
     url = f"https://crt.sh/?q=%25.{domain}&output=json"
@@ -42,28 +43,69 @@ def resolve_dns(subdomain):
             continue
     return '-', 'No resuelve'
 
-def check_http_status(subdomain):
-    headers = {'User-Agent':'Mozilla/5.0','Accept':'*/*'}
-    for proto in ('https://','http://'):
+def check_spf(subdomain):
+    """Check if the subdomain (or its parent) has an SPF record."""
+    try:
+        answers = dns.resolver.resolve(subdomain, 'TXT', lifetime=5)
+        for txt in answers:
+            if 'v=spf1' in txt.to_text().lower():
+                return True
+    except Exception:
+        pass
+    # also try the domain root
+    parts = subdomain.split('.')
+    if len(parts) > 2:
+        root_domain = '.'.join(parts[-2:])
         try:
-            r = requests.head(f"{proto}{subdomain}", headers=headers, timeout=5, allow_redirects=True)
-            return str(r.status_code), True
-        except:
+            answers = dns.resolver.resolve(root_domain, 'TXT', lifetime=5)
+            for txt in answers:
+                if 'v=spf1' in txt.to_text().lower():
+                    return True
+        except Exception:
+            pass
+    return False
+
+def check_http_status(subdomain):
+    """Return HTTP status, connectivity and security header info."""
+    headers = {'User-Agent': 'Mozilla/5.0', 'Accept': '*/*'}
+    for proto in ('https://', 'http://'):
+        try:
+            r = requests.head(
+                f"{proto}{subdomain}", headers=headers, timeout=5,
+                allow_redirects=True
+            )
+            uses_https = proto == 'https://'
+            sec_hdr = any(h in r.headers for h in (
+                'Content-Security-Policy',
+                'X-Frame-Options',
+                'Strict-Transport-Security'
+            ))
+            return str(r.status_code), True, uses_https, sec_hdr
+        except SSLError:
+            # try http if https fails due to certificate
             continue
-    return 'No responde', False
+        except Exception:
+            continue
+    return 'No responde', False, False, False
 
 def discover_subdomains(domain):
     subs = set(fetch_crtsh(domain)) | set(run_subfinder(domain))
     activos = []
     for i, sub in enumerate(sorted(subs), 1):
         ip, record = resolve_dns(sub)
-        status_code, connected = check_http_status(sub)
+        status_code, connected, uses_https, sec_hdr = check_http_status(sub)
         estado = f"Conectado ({status_code})" if connected else status_code
+        sends_mail = record == 'MX' or 'mail' in sub
+        spf_ok = check_spf(sub) if sends_mail else False
         activos.append({
             'id': f"SD{i}",
             'subdominio': sub,
             'ip': ip,
             'registro': record,
-            'estado': estado
+            'estado': estado,
+            'https': uses_https,
+            'security_headers': sec_hdr,
+            'sends_mail': sends_mail,
+            'spf': spf_ok,
         })
     return activos

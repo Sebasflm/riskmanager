@@ -4,6 +4,7 @@ from logic.valuation import evaluate_assets
 from logic.risks import identify_risks
 from logic.treatment import generate_treatments
 from logic.residual import calculate_residual
+from logic.kpis import calculate_kpis
 
 app = Flask(__name__)
 
@@ -22,11 +23,29 @@ def results(domain):
     riesgos = identify_risks(activos, valoraciones)
     tratamientos = generate_treatments(riesgos)
     residuales = calculate_residual(tratamientos, valoraciones, riesgos)
+    kpis = calculate_kpis(activos)
+    val_map = {v['id']: v for v in valoraciones}
+    trat_map = {t['id']: t for t in tratamientos}
+    reporte = []
+    for r in riesgos:
+        id_ = r['id']
+        valor = val_map.get(id_, {}).get('valor', 0)
+        trat = trat_map.get(id_, {})
+        reporte.append({
+            'id': id_,
+            'subdominio': r['subdominio'],
+            'valor': valor,
+            'nivel_riesgo': r['nivel_riesgo'],
+            'clasificacion': r['clasificacion'],
+            'tratamiento': trat.get('estrategia', ''),
+            'observaciones': r['vulnerabilidad'],
+            'recomendaciones': trat.get('accion', ''),
+        })
     return render_template(
         "results.html", domain=domain,
         activos=activos, valoraciones=valoraciones,
         riesgos=riesgos, tratamientos=tratamientos,
-        residuales=residuales
+        residuales=residuales, kpis=kpis, reporte=reporte
     )
 
 if __name__ == "__main__":
