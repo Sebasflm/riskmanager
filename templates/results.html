@@ -35,6 +35,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#" data-tab="residual" onclick="showTab('residual')">Riesgo residual</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="reporte" onclick="showTab('reporte')">Reporte técnico</a>
+            </li>
         </ul>
         <div class="tab-content mt-3">
             <div id="activos">
@@ -134,6 +137,32 @@
                         <td>{{ r.exposicion }}</td>
                         <td>{{ r.riesgo_residual }}</td>
                         <td>{{ r.clasificacion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="reporte" style="display:none;">
+                <table class="table table-bordered table-sm">
+                    <tr>
+                        <th>ID</th>
+                        <th>Subdominio</th>
+                        <th>Clasificación</th>
+                        <th>Riesgo</th>
+                        <th>Riesgo Residual</th>
+                        <th>Tratamiento</th>
+                        <th>Observaciones Técnicas</th>
+                        <th>Recomendaciones</th>
+                    </tr>
+                    {% for r in reporte %}
+                    <tr class="{{ r.riesgo_residual|lower }}">
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.subdominio }}</td>
+                        <td>{{ r.clasificacion }}</td>
+                        <td>{{ r.riesgo }}</td>
+                        <td>{{ r.riesgo_residual }}</td>
+                        <td>{{ r.tratamiento }}</td>
+                        <td>{{ r.observaciones }}</td>
+                        <td>{{ r.recomendaciones }}</td>
                     </tr>
                     {% endfor %}
                 </table>
