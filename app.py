@@ -19,7 +19,7 @@ def index():
 def results(domain):
     activos = discover_subdomains(domain)
     valoraciones = evaluate_assets(activos)
-    riesgos = identify_risks(activos)
+    riesgos = identify_risks(activos, valoraciones)
     tratamientos = generate_treatments(riesgos)
     residuales = calculate_residual(tratamientos, valoraciones, riesgos)
     return render_template(
