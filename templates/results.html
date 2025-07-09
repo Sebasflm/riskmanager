@@ -19,6 +19,11 @@
 <body>
     <div class="container mt-5">
         <h2 class="mb-3">Resultados para: {{ domain }}</h2>
+        <div class="mb-3">
+            <a class="btn btn-secondary" href="{{ url_for('export', domain=domain, fmt='csv') }}">Exportar CSV</a>
+            <a class="btn btn-secondary" href="{{ url_for('export', domain=domain, fmt='pdf') }}">Exportar PDF</a>
+            <a class="btn btn-link" href="{{ url_for('index') }}">Volver</a>
+        </div>
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" href="#" data-tab="activos" onclick="showTab('activos')">Activos encontrados</a>
